@@ -10,23 +10,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 @Slf4j
 @Component
 public class SendMessageJobs {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    private AtomicInteger count=new AtomicInteger();
+
     @Scheduled(fixedDelay = 2000)
     public void sendMessage(){
-        String json = "{\"foo\" : \"value\" }";
-        Message jsonMessage = MessageBuilder.withBody(json.getBytes())
-                .andProperties(MessagePropertiesBuilder.newInstance()
-                        .setContentType("application/json")
-                        .setDeliveryMode(MessageDeliveryMode.NON_PERSISTENT)
-                        .build())
-                .build();
+        setupCallbacks();
         rabbitTemplate.convertAndSend("fooDirectExchange","foo.key.1",new Foo("foo"));
-        log.info("send ");
+        log.info("send : {} ",count.incrementAndGet());
+    }
+
+    private void setupCallbacks() {
+        /*
+         * Confirms/returns enabled in application.properties - add the callbacks here.
+         */
+        rabbitTemplate.setReturnCallback((message, replyCode, replyText, exchange, routingKey) -> {
+            log.warn("Returned : {},replyCode: {},replyText: {},exchange/rk: {}/{}", message, replyCode, replyText, exchange, routingKey);
+        });
+
     }
 
     public static class Foo {

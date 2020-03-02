@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class QueueConfig {
 
+    public static final String FOO_ROUTER_KEY = "foo";
 
     @Bean
     Queue fooQueue() {
@@ -19,22 +20,13 @@ public class QueueConfig {
     }
 
     @Bean
-    FanoutExchange fooFanoutExchange() {
-        return new FanoutExchange("fooFanoutExchange");
-    }
-
-    @Bean
     DirectExchange fooDirectExchange() {
         return new DirectExchange("fooDirectExchange");
     }
 
-
     @Bean
-    Binding bindingFooQueue(Queue fooQueue, FanoutExchange fooFanoutExchange) {
-        return BindingBuilder.bind(fooQueue).to(fooFanoutExchange);
-    }@Bean
-    Binding bindingFooQueue2(Queue fooQueue, DirectExchange fooDirectExchange) {
-        return BindingBuilder.bind(fooQueue).to(fooDirectExchange).with("foo.key");
+    Binding bindingFooQueue(Queue fooQueue, DirectExchange fooDirectExchange) {
+        return BindingBuilder.bind(fooQueue).to(fooDirectExchange).with(FOO_ROUTER_KEY);
     }
 
 

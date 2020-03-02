@@ -19,23 +19,6 @@ import org.springframework.util.ErrorHandler;
 @Slf4j
 @Configuration
 public class RabbitmqConfig {
-    @Value("${spring.rabbitmq.host}")
-    private String host;
-
-
-    @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter jsonConverter) {
-        RabbitTemplate template = new RabbitTemplate(connectionFactory);
-        template.setMessageConverter(jsonConverter);
-        template.setMandatory(true);
-
-
-        template.setReturnCallback((message, replyCode, replyText, exchange, routingKey) -> {
-            log.warn("Returned: {},replyCode: {},replyText: {},exchange/rk: {}/{}", message, replyCode, replyText, exchange, routingKey);
-        });
-        return template;
-    }
-
     @Bean
     public MessageConverter jsonConverter() {
         return new Jackson2JsonMessageConverter();
@@ -49,15 +32,4 @@ public class RabbitmqConfig {
         listenerFactory.setMaxConcurrentConsumers(5);
         return listenerFactory;
     }
-
-    //
-    @Bean
-    ConnectionFactory connectionFactory() {
-        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(host);
-        cachingConnectionFactory.setPublisherReturns(true);
-        return cachingConnectionFactory;
-    }
-
-
-
 }
