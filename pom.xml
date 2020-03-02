@@ -12,6 +12,7 @@
 		<module>log4j2</module>
 		<module>spring-rabbit-confirms-returns</module>
 		<module>spring-rabbit-json</module>
+		<module>spring-rabbit-ack</module>
 		<module>spring-rabbit-global-errorhandler</module>
 	</modules>
 	<properties>

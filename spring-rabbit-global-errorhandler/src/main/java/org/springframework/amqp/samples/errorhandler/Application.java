@@ -38,9 +38,9 @@ public class Application {
 
 	private void runDemo() throws Exception {
 		this.template.convertAndSend(TEST_QUEUE, new Foo("bar"));
-		this.template.convertAndSend(TEST_QUEUE, new Foo("bar"), m -> {
-			return new Message("some bad json".getBytes(), m.getMessageProperties());
-		});
+//		this.template.convertAndSend(TEST_QUEUE, new Foo("bar"), m -> {
+//			return new Message("some bad json".getBytes(), m.getMessageProperties());
+//		});
 		Thread.sleep(5000);
 	}
 

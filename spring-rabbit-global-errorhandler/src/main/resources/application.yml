@@ -8,3 +8,4 @@ spring:
           multiplier: 1.5
           max-interval: 10000
           max-attempts: 3
+    host: 192.168.56.12
